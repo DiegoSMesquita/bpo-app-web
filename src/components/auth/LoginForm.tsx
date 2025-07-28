@@ -52,7 +52,7 @@ export function LoginForm() {
       
       toast({
         title: 'Login realizado com sucesso!',
-        description: 'Bem-vindo ao BPO Contagem',
+        description: 'Bem-vindo ao BPO WEB! Estamos felizes em tê-lo conosco.',
       });
     } catch (error) {
       toast({
@@ -67,7 +67,7 @@ export function LoginForm() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-light to-background p-4">
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="text-center">
-          <div className="flex items-center justify-center mb-4">
+          <div className="flex items-center justify-center mb-5">
             <Package className="h-12 w-12 text-primary" />
           </div>
           <CardTitle className="text-2xl font-bold">BPO WEB</CardTitle>

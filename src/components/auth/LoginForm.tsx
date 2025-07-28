@@ -70,7 +70,7 @@ export function LoginForm() {
           <div className="flex items-center justify-center mb-4">
             <Package className="h-12 w-12 text-primary" />
           </div>
-          <CardTitle className="text-2xl font-bold">BPO Contagem</CardTitle>
+          <CardTitle className="text-2xl font-bold">BPO WEB</CardTitle>
           <p className="text-muted-foreground">Sistema de Contagem de Estoque</p>
         </CardHeader>
         <CardContent>

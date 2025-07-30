@@ -9,9 +9,14 @@ import {
   MapPin,
   History,
   Users,
-  Settings
+  Settings,
+  Phone,
+  LogOutIcon,
+  MegaphoneIcon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { MenubarSubTrigger } from '@radix-ui/react-menubar';
+import { log } from 'node:console';
 
 const getNavigationItems = (role: string) => {
   const baseItems = [
@@ -26,16 +31,16 @@ const getNavigationItems = (role: string) => {
         { title: 'Clientes', href: '/dashboard/clients', icon: Building },
         { title: 'Contagens', href: '/dashboard/counts', icon: ClipboardCheck },
         { title: 'Relatórios', href: '/dashboard/reports', icon: BarChart3 },
-        { title: 'Usuários', href: '/dashboard/users', icon: Users }
-      ];
-    case 'client_admin':
-      return [
-        ...baseItems,
-        { title: 'Produtos', href: '/dashboard/products', icon: Package },
+        { title: 'Usuários', href: '/dashboard/users', icon: Users },
+        {title: 'Produtos', href: '/dashboard/products', icon: Package },
         { title: 'Setores', href: '/dashboard/sectors', icon: MapPin },
         { title: 'Histórico', href: '/dashboard/history', icon: History },
-        { title: 'Configurações', href: '/dashboard/settings', icon: Settings }
+        { title: 'Configurações', href: '/dashboard/settings', icon: Settings },
+        { title: 'Comunicados', href: '/dashboard/announcements', icon: MegaphoneIcon },
+                { title: 'Sair', href: '/logout', icon: LogOutIcon}
+
       ];
+   
     default:
       return baseItems;
   }

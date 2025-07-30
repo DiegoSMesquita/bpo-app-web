@@ -169,8 +169,6 @@ export function LoginForm() {
               <h4 className="text-sm font-medium mb-2">Credenciais de Demonstração:</h4>
               <div className="text-xs space-y-1">
                 <p><strong>Admin BPO:</strong> admin@bpo.com / 123456</p>
-                <p><strong>Cliente:</strong> cliente@empresa.com / 123456</p>
-                <p><strong>Funcionário:</strong> funcionario@empresa.com / 123456 (Código: EMP001)</p>
               </div>
             </div>
           </form>

@@ -1,11 +1,11 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
-import { 
-  LayoutDashboard, 
-  Building, 
-  ClipboardCheck, 
-  BarChart3, 
-  Package, 
+import {
+  LayoutDashboard,
+  Building,
+  ClipboardCheck,
+  BarChart3,
+  Package,
   MapPin,
   History,
   Users,
@@ -32,15 +32,15 @@ const getNavigationItems = (role: string) => {
         { title: 'Contagens', href: '/dashboard/counts', icon: ClipboardCheck },
         { title: 'Relatórios', href: '/dashboard/reports', icon: BarChart3 },
         { title: 'Usuários', href: '/dashboard/users', icon: Users },
-        {title: 'Produtos', href: '/dashboard/products', icon: Package },
+        { title: 'Produtos', href: '/dashboard/products', icon: Package },
         { title: 'Setores', href: '/dashboard/sectors', icon: MapPin },
         { title: 'Histórico', href: '/dashboard/history', icon: History },
         { title: 'Configurações', href: '/dashboard/settings', icon: Settings },
         { title: 'Comunicados', href: '/dashboard/announcements', icon: MegaphoneIcon },
-                { title: 'Sair', href: '/logout', icon: LogOutIcon}
+        { title: 'Sair', href: '/logout', icon: LogOutIcon }
 
       ];
-   
+
     default:
       return baseItems;
   }
@@ -49,7 +49,7 @@ const getNavigationItems = (role: string) => {
 export function DashboardLayout() {
   const { user } = useAuthStore();
   const location = useLocation();
-  
+
   const navigationItems = getNavigationItems(user?.role || '');
 
   return (
@@ -67,8 +67,8 @@ export function DashboardLayout() {
                     to={item.href}
                     className={cn(
                       "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                      isActive 
-                        ? "bg-primary text-primary-foreground shadow-md" 
+                      isActive
+                        ? "bg-primary text-primary-foreground shadow-md"
                         : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                     )}
                   >

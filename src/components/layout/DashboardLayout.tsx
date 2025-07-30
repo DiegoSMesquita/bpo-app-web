@@ -9,15 +9,21 @@ import {
   MapPin,
   History,
   Users,
+<<<<<<< Updated upstream
   Settings,
   Phone,
   LogOutIcon,
   MegaphoneIcon
+=======
+  useState,
+  Settings
+>>>>>>> Stashed changes
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MenubarSubTrigger } from '@radix-ui/react-menubar';
 import { log } from 'node:console';
 
+// Function to get navigation items based on user role
 const getNavigationItems = (role: string) => {
   const baseItems = [
     { title: 'Dashboard', href: '/dashboard', icon: LayoutDashboard }

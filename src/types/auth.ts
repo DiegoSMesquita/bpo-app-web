@@ -21,7 +21,6 @@ export interface Company {
   phone?: string;
   address?: string;
   status: 'active' | 'inactive' | 'suspended';
-  subscription_plan: 'basic' | 'premium' | 'enterprise';
   created_at: string;
   updated_at: string;
 }

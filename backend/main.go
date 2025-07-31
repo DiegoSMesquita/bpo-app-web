@@ -1,53 +1,41 @@
-// main.go
 package main
 
 import (
 	"log"
 	"net/http"
 	"os"
-	"github.com/DiegoSMesquita/bpo-app-web-main/models"
+
 	"github.com/DiegoSMesquita/bpo-app-web-main/config"
 	"github.com/DiegoSMesquita/bpo-app-web-main/routes"
-	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
 func main() {
-	config.LoadEnv()
-	config.ConnectDB()
-	r := gin.Default()
-	routes.AuthRoutes(r)
-	//Futuras rotas protegidas: 
-	// routes.UserRoutes(r)
-	r.Run()
-
-	// Carregar variáveis de ambiente
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("Erro ao carregar .env, usando variáveis do ambiente do sistema")
+	// Carregar .env
+	if err := godotenv.Load(); err != nil {
+		log.Println("Arquivo .env não encontrado, usando variáveis de ambiente do sistema")
 	}
 
-	// Conectar ao banco de dados
+	// Conectar ao banco
 	db := config.ConnectDB()
-	sqlDB, _ := db.DB()
+	sqlDB, err := db.DB()
+	if err != nil {
+		log.Fatal("Erro ao abrir conexão com o banco:", err)
+	}
 	defer sqlDB.Close()
 
-	// Registrar rotas
+	// Iniciar rotas
 	router := routes.SetupRouter()
 
+	// Porta
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 
-	log.Printf("Servidor rodando na porta %s...", port)
-	http.ListenAndServe(":"+port, router)
-
-
-	func ConectaComBanco() {
-    var err error
-    DB, err = gorm.Open(...)
-    
-    DB.AutoMigrate(&models.Empresa{}) // adiciona aqui
-}
+	log.Printf("Servidor rodando em http://localhost:%s", port)
+	err = http.ListenAndServe(":"+port, router)
+	if err != nil {
+		log.Fatal("Erro ao iniciar servidor:", err)
+	}
 }

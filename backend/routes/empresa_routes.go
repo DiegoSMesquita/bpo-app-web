@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"bpo-app-web-main/controllers"
+	"github.com/DiegoSMesquita/bpo-app-web-main/controllers"
 
 	"github.com/gin-gonic/gin"
 )

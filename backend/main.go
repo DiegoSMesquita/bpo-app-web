@@ -2,13 +2,11 @@
 package main
 
 import (
-	"bpo-backend/config"
-	"bpo-backend/routes"
 	"log"
 	"net/http"
 	"os"
-	"bpo-app-web-main/models"
-"github.com/DiegoSMesquita/bpo-app-web-main/config"
+	"github.com/DiegoSMesquita/bpo-app-web-main/models"
+	"github.com/DiegoSMesquita/bpo-app-web-main/config"
 	"github.com/DiegoSMesquita/bpo-app-web-main/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"

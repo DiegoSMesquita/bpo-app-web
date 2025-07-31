@@ -9,15 +9,10 @@ import {
   MapPin,
   History,
   Users,
-<<<<<<< Updated upstream
   Settings,
   Phone,
   LogOutIcon,
   MegaphoneIcon
-=======
-  useState,
-  Settings
->>>>>>> Stashed changes
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MenubarSubTrigger } from '@radix-ui/react-menubar';
@@ -43,7 +38,7 @@ const getNavigationItems = (role: string) => {
         { title: 'Histórico', href: '/dashboard/history', icon: History },
         { title: 'Configurações', href: '/dashboard/settings', icon: Settings },
         { title: 'Comunicados', href: '/dashboard/announcements', icon: MegaphoneIcon },
-        { title: 'Sair', href: '/logout', icon: LogOutIcon }
+        { title: 'Sair', href: '/logout', icon: LogOutIcon },
 
       ];
 

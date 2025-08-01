@@ -6,11 +6,11 @@ import (
 )
 
 func SetupRouter() *gin.Engine {
-	r := gin.Default()
+	router := gin.Default()
 	// Aplica o middleware de CORS
-	r.Use(config.SetupCORS())
-	AuthRoutes(r)
-	EmpresaRoutes(r)
+	router.Use(config.SetupCORS())
+	AuthRoutes(router)
+	EmpresaRoutes(router)
 
-	return r
+	return router
 }

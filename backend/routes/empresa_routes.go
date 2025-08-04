@@ -6,13 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func EmpresaRoutes(r *gin.Engine) {
-	grupo := r.Group("/empresas")
+func EmpresaRoutes(router *gin.Engine) {
+	empresa := router.Group("/empresas")
 	{
-		grupo.POST("/", controllers.CriarEmpresa)
-		grupo.GET("/", controllers.ListarEmpresas)
-		grupo.GET("/:id", controllers.BuscarEmpresa)
-		grupo.PUT("/:id", controllers.AtualizarEmpresa)
-		grupo.DELETE("/:id", controllers.DeletarEmpresa)
+		empresa.POST("/", controllers.CriarEmpresa)
+		empresa.GET("/", controllers.ListarEmpresas)
 	}
 }

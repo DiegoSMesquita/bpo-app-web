@@ -3,79 +3,35 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/DiegoSMesquita/bpo-app-web-main/config"
-	"github.com/DiegoSMesquita/bpo-app-web-main/models"
+	"github.com.br/DiegoSMesquita/bpo-app-web-main/config"
+	"github.com.br/DiegoSMesquita/bpo-app-web-main/models"
+
 	"github.com/gin-gonic/gin"
 )
 
+// POST /empresas
 func CriarEmpresa(c *gin.Context) {
-	var novaEmpresa models.Empresa
-
-	if err := c.ShouldBindJSON(&novaEmpresa); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"erro": "Dados inválidos", "detalhes": err.Error()})
+	var empresa models.Empresa
+	if err := c.ShouldBindJSON(&empresa); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos"})
 		return
 	}
 
-	if err := config.DB.Create(&novaEmpresa).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"erro": "Erro ao criar empresa", "detalhes": err.Error()})
+	if err := config.DB.Create(&empresa).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao criar empresa"})
 		return
 	}
 
-	c.JSON(http.StatusCreated, novaEmpresa)
+	c.JSON(http.StatusCreated, gin.H{"message": "Empresa criada com sucesso"})
 }
 
+// GET /empresas
 func ListarEmpresas(c *gin.Context) {
 	var empresas []models.Empresa
-
 	if err := config.DB.Find(&empresas).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"erro": "Erro ao buscar empresas", "detalhes": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao listar empresas"})
 		return
 	}
 
 	c.JSON(http.StatusOK, empresas)
-}
-
-func BuscarEmpresa(c *gin.Context) {
-	id := c.Param("id")
-	var empresa models.Empresa
-
-	if err := config.DB.First(&empresa, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"erro": "Empresa não encontrada"})
-		return
-	}
-
-	c.JSON(http.StatusOK, empresa)
-}
-
-func AtualizarEmpresa(c *gin.Context) {
-	id := c.Param("id")
-	var empresa models.Empresa
-
-	if err := config.DB.First(&empresa, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"erro": "Empresa não encontrada"})
-		return
-	}
-
-	if err := c.ShouldBindJSON(&empresa); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"erro": "Dados inválidos", "detalhes": err.Error()})
-		return
-	}
-
-	if err := config.DB.Save(&empresa).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"erro": "Erro ao atualizar empresa", "detalhes": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, empresa)
-}
-
-func DeletarEmpresa(c *gin.Context) {
-	id := c.Param("id")
-
-	if err := config.DB.Delete(&models.Empresa{}, id).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"erro": "Erro ao deletar empresa", "detalhes": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"mensagem": "Empresa deletada com sucesso"})
 }

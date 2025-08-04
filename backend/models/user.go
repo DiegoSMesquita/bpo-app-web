@@ -1,14 +1,14 @@
 package models
 
-import (
-	"time"
-)
-
 type User struct {
-	ID        int       `json:"id" gorm:"primaryKey"`
-	Name      string    `json:"name" gorm:"not null"`
-	Email     string    `json:"email" gorm:"unique;not null"`
-	Password  string    `json:"password" gorm:"not null"`
-	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
-	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`
+	ID          uint   `gorm:"primaryKey" json:"id"`
+	Email       string `gorm:"unique;not null" json:"email"`
+	Password    string `gorm:"not null" json:"password"`
+	UserType    string `json:"userType"`    // admin, client, employee
+	CompanyCode string `json:"companyCode"` // usado por funcionário
+}
+
+type LoginInput struct {
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }

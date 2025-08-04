@@ -1,14 +1,11 @@
-// models/empresa.go
 package models
 
-import "gorm.io/gorm"
+import "time"
 
 type Empresa struct {
-	ID           uint           `json:"id" gorm:"primaryKey;autoIncrement"`
-	Nome         string         `json:"nome"`
-	CNPJ         string         `json:"cnpj"`
-	Endereco     string         `json:"endereco"`
-	CriadoEm     string         `json:"criado_em"`
-	AtualizadoEm string         `json:"atualizado_em"`
-	DeletadoEm   gorm.DeletedAt `json:"-" gorm:"index"`
+	ID        uint      `gorm:"primaryKey" json:"id"`
+	Nome      string    `gorm:"not null" json:"nome"`
+	Codigo    string    `gorm:"unique;not null" json:"codigo"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

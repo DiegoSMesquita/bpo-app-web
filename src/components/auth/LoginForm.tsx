@@ -11,28 +11,36 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Package, Eye, EyeOff } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import axios from 'axios';
 
 const loginSchema = z.object({
   email: z.string().email('Email inválido'),
   password: z.string().min(6, 'Senha deve ter pelo menos 6 caracteres'),
-  userType: z.enum(['admin', 'client', 'employee']),
+  userType: z.enum(['admin']),
   companyCode: z.string().optional()
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
+
+const api = axios.create({
+  baseURL: 'http://localhost:8081',
+  withCredentials: true,
+});
 
 export function LoginForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const { login, loading } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
       password: '',
-      userType: 'admin'
+      userType: 'admin',
+      companyCode: ''
     }
   });
 
@@ -40,24 +48,42 @@ export function LoginForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
+      const endpoint = isRegistering ? '/register' : '/login';
+
+      const response = await api.post(endpoint, {
+        email: data.email,
+        password: data.password,
+        userType: data.userType,
+        companyCode: data.companyCode
+      });
+
+      if (isRegistering) {
+        toast({
+          title: 'Usuário cadastrado com sucesso!',
+          description: 'Você já pode fazer login.',
+        });
+        setIsRegistering(false);
+        return;
+      }
+
       await login({
         email: data.email,
         password: data.password,
         role: data.userType === 'admin' ? undefined : data.userType,
-        companyCode: data.companyCode
+        companyCode: data.companyCode,
       });
 
       const redirectTo = location.state?.from?.pathname || '/dashboard';
       navigate(redirectTo, { replace: true });
-      
+
       toast({
         title: 'Login realizado com sucesso!',
         description: 'Bem-vindo ao BPO WEB! Estamos felizes em tê-lo conosco.',
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
-        title: 'Erro no login',
-        description: 'Email ou senha incorretos',
+        title: 'Erro na autenticação',
+        description: error.response?.data?.message || 'Verifique suas credenciais.',
         variant: 'destructive'
       });
     }
@@ -75,11 +101,10 @@ export function LoginForm() {
         </CardHeader>
         <CardContent>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* User Type Selection */}
             <div className="space-y-2">
               <Label htmlFor="userType">Tipo de Usuário</Label>
-              <Select 
-                value={form.watch('userType')} 
+              <Select
+                value={form.watch('userType')}
                 onValueChange={(value) => form.setValue('userType', value as any)}
               >
                 <SelectTrigger>
@@ -87,8 +112,6 @@ export function LoginForm() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="admin">Administrador BPO</SelectItem>
-                  <SelectItem value="client">Cliente</SelectItem>
-                  <SelectItem value="employee">Funcionário</SelectItem>
                 </SelectContent>
               </Select>
               {form.formState.errors.userType && (
@@ -96,7 +119,6 @@ export function LoginForm() {
               )}
             </div>
 
-            {/* Company Code for Employees */}
             {watchUserType === 'employee' && (
               <div className="space-y-2">
                 <Label htmlFor="companyCode">Código da Empresa</Label>
@@ -105,13 +127,9 @@ export function LoginForm() {
                   placeholder="Ex: EMP001"
                   {...form.register('companyCode')}
                 />
-                {form.formState.errors.companyCode && (
-                  <p className="text-sm text-destructive">{form.formState.errors.companyCode.message}</p>
-                )}
               </div>
             )}
 
-            {/* Email */}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -125,7 +143,6 @@ export function LoginForm() {
               )}
             </div>
 
-            {/* Password */}
             <div className="space-y-2">
               <Label htmlFor="password">Senha</Label>
               <div className="relative">
@@ -142,11 +159,7 @@ export function LoginForm() {
                   className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </Button>
               </div>
               {form.formState.errors.password && (
@@ -154,17 +167,29 @@ export function LoginForm() {
               )}
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full" 
+            <Button
+              type="submit"
+              className="w-full"
               variant="hero"
               size="lg"
               disabled={loading}
             >
-              {loading ? 'Entrando...' : 'Entrar'}
+              {loading ? 'Processando...' : isRegistering ? 'Cadastrar' : 'Entrar'}
             </Button>
 
-            {/* Demo credentials info */}
+            <div className="text-center">
+              <p className="text-sm">
+                {isRegistering ? 'Já tem conta?' : 'Não tem conta?'}{' '}
+                <button
+                  type="button"
+                  onClick={() => setIsRegistering(!isRegistering)}
+                  className="text-primary underline"
+                >
+                  {isRegistering ? 'Faça login' : 'Cadastre-se'}
+                </button>
+              </p>
+            </div>
+
             <div className="mt-6 p-4 bg-muted rounded-lg">
               <h4 className="text-sm font-medium mb-2">Credenciais de Demonstração:</h4>
               <div className="text-xs space-y-1">

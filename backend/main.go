@@ -6,9 +6,21 @@ import (
 	"os"
 
 	"github.com/DiegoSMesquita/bpo-app-web-main/config"
+	"github.com/DiegoSMesquita/bpo-app-web-main/controllers"
 	"github.com/DiegoSMesquita/bpo-app-web-main/routes"
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
+
+func EmpresaRoutes(router *gin.Enegine) {
+	empresa := router.Group("/empresas")
+	{
+		empresa.POST("/", controllers.CriarEmpresa)
+		empresa.GET("/", controllers.ListarEmpresas)
+
+	}
+
+}
 
 func main() {
 	// Carregar .env
@@ -38,4 +50,5 @@ func main() {
 	if err != nil {
 		log.Fatal("Erro ao iniciar servidor:", err)
 	}
+
 }

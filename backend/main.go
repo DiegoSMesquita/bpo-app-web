@@ -2,53 +2,48 @@ package main
 
 import (
 	"log"
-	"net/http"
 	"os"
 
-	"github.com/DiegoSMesquita/bpo-app-web-main/config"
-	"github.com/DiegoSMesquita/bpo-app-web-main/controllers"
-	"github.com/DiegoSMesquita/bpo-app-web-main/routes"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+
+	"github.com/DiegoSMesquita/bpo-app-web-main/config"
+	"github.com/DiegoSMesquita/bpo-app-web-main/routes"
 )
 
-func EmpresaRoutes(router *gin.Enegine) {
-	empresa := router.Group("/empresas")
-	{
-		empresa.POST("/", controllers.CriarEmpresa)
-		empresa.GET("/", controllers.ListarEmpresas)
-
-	}
-
-}
-
 func main() {
-	// Carregar .env
+	// Carrega variáveis de ambiente do arquivo .env
 	if err := godotenv.Load(); err != nil {
-		log.Println("Arquivo .env não encontrado, usando variáveis de ambiente do sistema")
+		log.Println("Arquivo .env não encontrado, usando variáveis do sistema")
 	}
 
-	// Conectar ao banco
-	db := config.ConnectDB()
-	sqlDB, err := db.DB()
-	if err != nil {
-		log.Fatal("Erro ao abrir conexão com o banco:", err)
-	}
-	defer sqlDB.Close()
+	// Conecta ao banco de dados
+	config.ConnectDB()
 
-	// Iniciar rotas
-	router := routes.SetupRouter()
+	// Cria o servidor
+	r := gin.Default()
 
-	// Porta
+	// Middleware CORS
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}))
+
+	// Rotas
+	routes.AuthRoutes(r)
+	routes.EmpresaRoutes(r)
+
+	// Porta (definida via .env ou padrão 8081)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8081"
 	}
 
-	log.Printf("Servidor rodando em http://localhost:%s", port)
-	err = http.ListenAndServe(":"+port, router)
-	if err != nil {
-		log.Fatal("Erro ao iniciar servidor:", err)
+	log.Printf("Servidor rodando na porta %s...\n", port)
+	if err := r.Run(":" + port); err != nil {
+		log.Fatalf("Erro ao iniciar servidor: %v", err)
 	}
-
 }

@@ -3,8 +3,8 @@ package controllers
 import (
 	"net/http"
 
-	"github.com.br/DiegoSMesquita/bpo-app-web-main/config"
-	"github.com.br/DiegoSMesquita/bpo-app-web-main/models"
+	"github.com/DiegoSMesquita/bpo-app-web-main/config"
+	"github.com/DiegoSMesquita/bpo-app-web-main/models"
 
 	"github.com/gin-gonic/gin"
 )

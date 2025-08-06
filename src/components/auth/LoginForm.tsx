@@ -185,12 +185,12 @@ export function LoginForm() {
                   onClick={() => setIsRegistering(!isRegistering)}
                   className="text-primary underline"
                 >
-                  {isRegistering ? 'Faça login' : 'Cadastre-se'}
+                  {isRegistering ? 'Faça login' : 'Cadastre-se 'teste''}
                 </button>
               </p>
             </div>
 
-          
+          (teste)
              
                       </form>
         </CardContent>

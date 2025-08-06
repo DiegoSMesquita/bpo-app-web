@@ -15,28 +15,28 @@ func Register(c *gin.Context) {
 	var input models.User
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Dados inválidos"})
 		return
 	}
 
 	// Verifica se já existe um usuário com esse email
 	var existingUser models.User
 	if err := config.DB.Where("email = ?", input.Email).First(&existingUser).Error; err == nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Usuário já existe"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Usuário já existe"})
 		return
 	}
 
 	// Criptografar senha
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao gerar senha criptografada"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Erro ao gerar senha criptografada"})
 		return
 	}
 	input.Password = string(hashedPassword)
 
 	// Criar no banco
 	if err := config.DB.Create(&input).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao salvar no banco de dados"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Erro ao salvar no banco de dados"})
 		return
 	}
 
@@ -49,18 +49,18 @@ func Login(c *gin.Context) {
 	var user models.User
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Dados inválidos"})
 		return
 	}
 
 	if err := config.DB.Where("email = ?", input.Email).First(&user).Error; err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não encontrado"})
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Usuário não encontrado"})
 		return
 	}
 
 	// Comparar senha
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Senha incorreta"})
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Senha incorreta"})
 		return
 	}
 

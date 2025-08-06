@@ -2,7 +2,7 @@ package models
 
 type User struct {
 	ID          uint   `gorm:"primaryKey" json:"id"`
-	Email       string `gorm:"unique;not null" json:"email"`
+	Email       string `json:"email" binding:"required" gorm:"unique"`
 	Password    string `gorm:"not null" json:"password"`
 	UserType    string `json:"userType"`    // admin, client, employee
 	CompanyCode string `json:"companyCode"` // usado por funcionário

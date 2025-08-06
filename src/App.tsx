@@ -25,6 +25,8 @@ import CountingLoginPage from "./pages/counting/CountingLoginPage";
 import CountingPage from "./pages/counting/CountingPage";
 import CountingTestPage from "./pages/counting/CountingTestPage";
 import CompletionPage from "./pages/counting/CompletionPage";
+import ContagensDashboard from './pages/admin/ContagensDashboard'; // ajuste o caminho conforme seu projeto
+
 
 // Other Pages
 import NotFound from "./pages/NotFound";
@@ -44,6 +46,8 @@ const App = () => (
           <Route path="/counting/:countingId" element={<CountingLoginPage />} />
           <Route path="/counting/:countingId/sector/:sectorId" element={<CountingPage />} />
           <Route path="/counting/:countingId/completed" element={<CompletionPage />} />
+          <Route path="/dashboard/contagens" element={<ContagensDashboard />} />
+
           
           {/* Protected Routes */}
           <Route path="/" element={
@@ -61,14 +65,9 @@ const App = () => (
                   <ClientsPage />
                 </ProtectedRoute>
               } />
-              <Route path="counts" element={
-                <ProtectedRoute allowedRoles={['super_admin', 'bpo_admin']}>
-                  <div className="p-8 text-center">
-                    <h1 className="text-2xl font-bold">Monitoramento de Contagens</h1>
-                    <p className="text-muted-foreground mt-2">Em desenvolvimento</p>
-                  </div>
-                </ProtectedRoute>
-              } />
+              <Route path="/dashboard/contagens" element={<ContagensDashboard />} />
+
+
               <Route path="reports" element={
                 <ProtectedRoute allowedRoles={['super_admin', 'bpo_admin']}>
                   <div className="p-8 text-center">

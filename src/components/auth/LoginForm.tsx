@@ -65,11 +65,11 @@ export function LoginForm() {
         setIsRegistering(false);
         return;
       }
+      const user = response.data.user;
 
       await login({
         email: data.email,
-        password: data.password,
-        role: data.userType === 'admin' ? undefined : data.userType,
+        role: data.userType,
         companyCode: data.companyCode,
       });
 

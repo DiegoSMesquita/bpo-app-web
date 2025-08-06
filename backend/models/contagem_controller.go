@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/DiegoSMesquita/bpo-app-web-main/backend/models"
+	"github.com/DiegoSMesquita/bpo-app-web/backend/models"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

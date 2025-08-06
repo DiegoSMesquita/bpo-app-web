@@ -6,8 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/DiegoSMesquita/bpo-app-web-main/backend/models"
-
+	"github.com/DiegoSMesquita/bpo-app-web-main/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )

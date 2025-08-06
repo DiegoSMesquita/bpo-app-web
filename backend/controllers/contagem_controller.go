@@ -2,75 +2,43 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
-	"github.com/DiegoSMesquita/bpo-app-web-main/backend/models"
+	"bpo-app-web/backend/models"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-func GetContagens(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
-	var contagens []models.Contagem
-	db.Find(&contagens)
-	c.JSON(http.StatusOK, contagens)
-}
-
-func GetContagemByID(c *gin.Context) {
+// GET /contagens/:id
+func GetContagem(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
 	var contagem models.Contagem
-	if err := db.First(&contagem, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Contagem não encontrada"})
+
+	if err := db.Preload("Itens").First(&contagem, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"message": "Contagem não encontrada"})
 		return
 	}
+
 	c.JSON(http.StatusOK, contagem)
 }
 
-func UpdateContagem(c *gin.Context) {
+// POST /contagens/:id/respostas
+func SalvarContagemFuncionario(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	id := c.Param("id")
-	var contagem models.Contagem
-	if err := db.First(&contagem, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Contagem não encontrada"})
-		return
-	}
-	if err := c.ShouldBindJSON(&contagem); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	db.Save(&contagem)
-	c.JSON(http.StatusOK, contagem)
-}
 
-func DeleteContagem(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
-	id := c.Param("id")
-	var contagem models.Contagem
-	if err := db.First(&contagem, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Contagem não encontrada"})
+	var respostas []models.RespostaContagem
+	if err := c.ShouldBindJSON(&respostas); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Dados inválidos"})
 		return
 	}
-	db.Delete(&contagem)
-	c.JSON(http.StatusOK, gin.H{"message": "Contagem apagada com sucesso"})
-}
 
-func UpdateTempoContagem(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
-	id := c.Param("id")
-	var input struct {
-		TempoRestante string `json:"tempo_restante"`
+	for i := range respostas {
+		respostas[i].ContagemID, _ = strconv.ParseUint(id, 10, 64)
+		db.Create(&respostas[i])
 	}
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	var contagem models.Contagem
-	if err := db.First(&contagem, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Contagem não encontrada"})
-		return
-	}
-	contagem.TempoRestante = input.TempoRestante
-	db.Save(&contagem)
-	c.JSON(http.StatusOK, contagem)
+
+	c.JSON(http.StatusOK, gin.H{"message": "Contagem salva com sucesso!"})
 }

@@ -3,7 +3,7 @@ package models
 import "gorm.io/gorm"
 
 // Contagem representa uma sessão de contagem de estoque
-type Contagem struct {
+type resposta_Contagem struct {
 	ID          uint           `gorm:"primaryKey" json:"id"`
 	Descricao   string         `json:"descricao"`
 	Data        string         `json:"data"`
